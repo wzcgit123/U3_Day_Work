@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xsi:schemaLocation=
+               " http://www.springframework.org/schema/beans
+                        http://www.springframework.org/schema/beans/spring-beans.xsd
+                         http://www.springframework.org/schema/context
+                         http://www.springframework.org/schema/context/spring-context.xsd
+                          http://www.springframework.org/schema/aop
+                           http://www.springframework.org/schema/aop/spring-aop.xsd
+                           http://www.springframework.org/schema/tx
+                           http://www.springframework.org/schema/tx/spring-tx.xsd"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns="http://www.springframework.org/schema/beans">
+
+
+    <!--第一步  扫描注解-->
+    <context:component-scan base-package="com.whhp"></context:component-scan>
+
+
+    <!--第二步  读取四要素-->
+    <context:property-placeholder location="classpath:db/db.properties"></context:property-placeholder>
+
+
+    <!--第三步  配置数据源-->
+    <bean class="com.mchange.v2.c3p0.ComboPooledDataSource" id="dataSource">
+        <property name="driverClass" value="${driverClass}"></property>
+        <property name="jdbcUrl" value="${jdbcUrl}"></property>
+        <property name="user" value="${user}"></property>
+        <property name="password" value="${password}"></property>
+   </bean>
+
+
+
+    <!--第四步  创建SqlsessionFactory-->
+    <bean class="org.mybatis.spring.SqlSessionFactoryBean" id="sqlSessionFactory">
+        <!--关联数据源-->
+        <property name="dataSource" ref="dataSource"></property>
+        <!--Mapper反射   扫描mapper-->
+        <property name="mapperLocations" value="classpath*:mapper/*.xml"></property>
+        <!--给entity中的类取别名-->
+        <property name="typeAliasesPackage" value="com.whhp.entity"></property>
+        <!--配置mybatis主文件-->
+        <property name="configLocation" value="mybatis/mybatis.xml"></property>
+    </bean>
+
+
+    <!--第五步 扫描接口和映射-->
+
+  <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+      <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"></property>
+      <property name="basePackage" value="com.whhp.mapper"></property>
+  </bean>
+</beans>

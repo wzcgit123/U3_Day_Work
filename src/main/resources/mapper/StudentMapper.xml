@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.whhp.mapper.StudentMapper">
+
+    <resultMap type="StudentInfo" id="studentInfoResultMap">
+
+    <!--Integer sid;String sname;String Sgender;Integer sage;String saddress;String semail;//多对一关系 private Room room; -->
+
+
+    <id column="sid" property="sid"/>
+
+    <result column="sname" property="sname"/>
+
+    <result column="Sgender" property="Sgender"/>
+
+    <result column="sage" property="sage"/>
+
+    <result column="saddress" property="saddress"/>
+
+    <result column="semail" property="semail"/>
+
+
+    <association property="room" javaType="Room">
+
+    <id column="rid" property="rid"/>
+
+    <result column="rname" property="rname"/>
+
+   </association>
+
+</resultMap>
+
+
+
+    <select id="selectAll" resultMap="studentInfoResultMap">
+       select * from studentInfo s  left join room r
+on s.rid =r.rid
+    </select>
+</mapper>
